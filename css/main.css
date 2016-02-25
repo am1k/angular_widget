@@ -1,0 +1,194 @@
+#applications {
+    width: 270px;
+    margin: 50px auto;
+}
+.header {
+    background-color: #f2f0f2;
+}
+.sub-header {
+    overflow: hidden;
+    padding: 5px 0;
+}
+.name-currency {
+    display: inline-block;
+    position: absolute;
+    margin-left: 5px;
+    margin-top: -25px;
+    text-transform: uppercase;
+    color: #697D92;
+}
+.name-currency:before {
+    content: '';
+    display: inline-block;
+    background: url("../img/arrowDown.png")no-repeat;
+    width: 14px;
+    height: 9px;
+    left: 0;
+}
+.local-time {
+    display: inline-block;
+    float: right;
+}
+.data {
+    display: inline-block;
+    color: #BC6C77;
+}
+.time {
+    display: inline-block;
+    color: #5C6973;
+}
+.clock {
+    display: inline-block;
+    background: url("../img/clock.png")no-repeat;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 4px;
+}
+.main-information {
+    position: relative;
+    background: #f2f0f2 url("../img/bid_ask_bg.png")no-repeat 50% 50%;
+    width: 270px;
+    height: 68px;
+}
+.sell {
+    display: inline-block;
+    position: relative;
+    width: 100px;
+    text-align: center;
+    padding-left: 10px;
+    position: relative;
+}
+.current-price {
+    color: #99F68A;
+    font-size: 20px;
+    padding-top: 10px;
+}
+.name {
+    text-transform: uppercase;
+    color: #99F68A;
+    padding-top: 10px;
+}
+.red {
+    color: red;
+}
+.middle-screen {
+    position: absolute;
+    color: #fff;
+    background: #353943;
+    z-index: 1;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    padding: 7px;
+    left: 43%;
+    top: 10%;
+    width: 20px;
+    text-align: center;
+}
+.up-arrow-left+.left {
+    background: url("../img/greenArrowBid.png")no-repeat;
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    left: 100%;
+    top: 15%;
+}
+.down-arrow-left+.left{
+    background: url("../img/redArrowBid.png")no-repeat;
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    left: 100%;
+    top: 55%;
+}
+.up-arrow-right+.right {
+    background: url("../img/greenArrow.png")no-repeat;
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    left: 25%;
+    top: 15%;
+}
+.down-arrow-right+.right{
+    background: url("../img/redArrow.png")no-repeat;
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    left: 25%;
+    top: 57%;
+}
+.buy {
+    display: inline-block;
+    position: relative;
+    width: 100px;
+    padding-left: 50px;
+    text-align: center;
+}
+.list-value {
+    outline: #000;
+    border-radius: 3px;
+}
+.information {
+    padding: 1px 0;
+    opacity: 0.8;
+}
+.active {
+    opacity: 1;
+    background: green;
+}
+.type-value {
+    display: inline-block;
+    width: 49%;
+    color: #9EA7B5;
+    height: 100%;
+    position: relative;
+    padding: 7px 0 7px 20px;
+    background: #272736;
+    border: 1px solid #000;
+    font-size: 20px;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    opacity: 0.7;
+}
+.arrow-right {
+    position: absolute;
+    background: url("../img/arrowLineAssetGray.png")no-repeat 50% 50%;
+    width: 8px;
+    height: 12px;
+    left: 3%;
+    top: 32%;
+}
+.current-progress {
+    border: 1px solid #000;
+    height: 100%;
+    display: inline-block;
+    width: 49%;
+    box-sizing: border-box;
+}
+.red-line {
+    display: inline-block;
+    width: 70%;
+    outline: #000000;
+    text-align: center;
+    height: 100%;
+    padding: 7px 0 7px 0;
+    font-size: 20px;
+    color: #fff;
+    background: red;
+    box-sizing: border-box;
+}
+.green-line {
+    display: inline-block;
+    width: 30%;
+    height: 100%;
+    outline: #000000;
+    text-align: center;
+    font-size: 20px;
+    padding: 7px 0 7px 0;
+    color: #fff;
+    background: green;
+    box-sizing: border-box;
+}
+.none {
+    display:  none;
+}

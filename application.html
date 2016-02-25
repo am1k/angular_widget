@@ -1,0 +1,22 @@
+<div class="header">
+    <div class="sub-header">
+        <div class="local-time">
+            <clock data="data" time="time"></clock>
+        </div>
+    </div>
+</div>
+<div class="main-information">
+    <info currentName="currentName"></info>
+</div>
+<div class="list-view">
+    <list ng-repeat="item in items"
+           delay="item.delay"
+           min="item.min"
+           max="item.max"
+           name="item.name"
+           active="current === item.id"
+           items="items"
+           id="item.id",
+           changeactive="changeActive"
+    ></list>
+</div>

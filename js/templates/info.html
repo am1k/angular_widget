@@ -1,0 +1,17 @@
+<div class="name-currency">
+    <i class="red-arrow"></i>
+    {{currentName}}
+</div>
+<div class="sell">
+    <div class="current-price" ng-class="{'down-arrow-left': !arrowSell, 'up-arrow-left': arrowSell}">{{sell}}</div>
+    <div class="left"></div>
+    <div class="name red">sell</div>
+</div>
+<div class="middle-screen">
+    {{ratio}}
+</div>
+<div class="buy">
+    <div class="current-price" ng-class="{'down-arrow-right': !arrowBuy, 'up-arrow-right': arrowBuy}">{{buy}}</div>
+    <div class="right"></div>
+    <div class="name">buy</div>
+</div>
