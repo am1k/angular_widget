@@ -10,22 +10,67 @@ app.config(['$stateProvider', function($stateProvider){
         });
 }]);
 
-app.controller('applicationCtrl', ['$scope', 'InfoCollection', '$location', function($scope, InfoCollection, $location){
+app.service('socket', function(){
 
-    var hash = $location.hash(),
-        ind = 0;
-    $scope.currentName = hash;
-    $scope.items = InfoCollection.all();
+    var socket = io.connect('http://localhost:3000');
+    return socket;
+});
 
-    if(hash){
-        for(var i = 0; i < $scope.items.length; i++){
-            if($scope.items[i].name == hash){
-                ind = i;
-                break;
+app.controller('applicationCtrl',
+    [   '$scope',
+        'InfoCollection',
+        '$location',
+        'socket',
+        'Mediator', function($scope, InfoCollection, $location, socket, Mediator){
+
+    socket.on('basicData', function(data){
+        InfoCollection.addAll(data);
+        $scope.updateData();
+    });
+
+
+    $scope.updateData = function(){
+        socket.on('sentData', function(data){
+            console.log(data);
+            InfoCollection.update( data );
+            $scope.addActive();
+        });
+    };
+
+    $scope.addActive = function(){
+        var hash = $location.hash(),
+            ind = 0;
+        $scope.currentName = hash;
+        $scope.items = InfoCollection.all();
+
+        if(hash){
+            for(var i = 0; i < $scope.items.length; i++){
+                if($scope.items[i].name == hash){
+                    ind = i;
+                    break;
+                }
             }
         }
-    }
-    $scope.current = InfoCollection.at(ind).id;
+        var current = InfoCollection.at(ind);
+
+        if(current !== undefined){
+            $scope.current = current.id;
+            InfoCollection.update({id: current.id, active: true});
+
+            function sendData(){
+
+                var currentModel = InfoCollection.get(current.id);
+                Mediator.publish('sellRatio:refresh', {
+                    sell: currentModel.sell,
+                    buy: currentModel.buy,
+                    ratio: currentModel.ratio,
+                    prevBuy: currentModel.prevBuy,
+                    prevSell: currentModel.prevSell
+                });
+            }
+            sendData();
+        }
+    };
 
     $scope.changeActive = function(id){
         var currentModel = InfoCollection.get({id:id});
@@ -81,63 +126,27 @@ app.directive('info', function($timeout,Mediator){
                 data.arrowBuy = data.buy > data.prevBuy;
                 data.arrowSell = data.sell > data.prevSell;
                 Object.assign($scope, data);
-            });
+        });
         }
     }
 });
 
-app.directive('list', function($timeout, generateRandom, Mediator){
+app.directive('list', function(){
     return {
         scope: {
-            min: '=',
-            max: '=',
             name: '=',
-            delay: '=',
+            sellratio: '=',
+            buyratio: '=',
             active: '=',
             items: '=',
             id: '=',
+            sell: '=',
+            ratio: '=',
+            buy: '=',
             changeactive: '='
         },
         restrict: 'E',
-        templateUrl: 'js/templates/list-item.html',
-
-
-        controller: function ($scope) {
-
-            console.log($scope);
-
-            function updateList(){
-                var buyRatio = generateRandom($scope.min, $scope.max);
-                $scope.prevBuy = $scope.buy || 0;
-                $scope.prevSell = $scope.sell || 0;
-                $scope.sellRatio = 100 - buyRatio;
-                $scope.buyRatio = buyRatio;
-                $scope.sell = generateRandom($scope.min, $scope.max);
-                $scope.buy = generateRandom($scope.min, $scope.max);
-                $scope.ratio = generateRandom($scope.min, $scope.max);
-
-                if($scope.active) {
-                    sendData();
-                }
-
-                $timeout(updateList, $scope.delay);
-            }
-
-            updateList();
-
-            function sendData(){
-                Mediator.publish('sellRatio:refresh', {
-                    sell: $scope.sell,
-                    buy: $scope.buy,
-                    ratio: $scope.ratio,
-                    prevBuy: $scope.prevBuy,
-                    prevSell: $scope.prevSell
-                });
-            }
-        },
-
-        link: function(scope, elem){
-        }
+        templateUrl: 'js/templates/list-item.html'
     }
 });
 
@@ -146,16 +155,6 @@ app.factory('InfoCollection', function($collection){
     var InfoCollection = $collection;
 
     var info = InfoCollection.getInstance();
-
-    info.add(
-        {min:1, max:5, name:'usa/rus', delay: 3000, active: false}
-    );
-    info.add(
-        {min:5, max:10, name:'usa/gbr', delay: 2000, active: false}
-    );
-    info.add(
-        {min:10, max:50, name:'usa/chi', delay: 4000, active: false}
-    );
 
     return info;
 });
@@ -204,3 +203,6 @@ app.service('Mediator', function(){
     };
 
 });
+
+
+
