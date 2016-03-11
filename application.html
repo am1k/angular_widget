@@ -6,14 +6,20 @@
     </div>
 </div>
 <div class="main-information">
-    <info currentName="currentName"></info>
+    <info currentname="currentname"
+          sell="sell"
+          buy="buy"
+          ratio="ratio"
+          prevbuy="prevbuy"
+          prevsell="prevsell"
+          arrowbuy="arrowbuy"
+          arrowsell="arrowsell"
+
+    ></info>
 </div>
 <div class="list-view">
     <list ng-repeat="item in items"
           name="item.name"
-          sell="item.sell"
-          buy="item.buy"
-          ratio="item.ratio"
           active="current === item.id"
           items="items"
           sellratio="item.sellRatio"

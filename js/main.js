@@ -21,17 +21,28 @@ app.controller('applicationCtrl',
         'InfoCollection',
         '$location',
         'socket',
-        'Mediator', function($scope, InfoCollection, $location, socket, Mediator){
+        'Mediator', function($scope, InfoCollection, $location, socket){
 
-    socket.on('basicData', function(data){
+    socket.on('basicList', function(data){
         InfoCollection.addAll(data);
+        $scope.addActive();
         $scope.updateData();
     });
 
+    socket.on('sentData', function(data){
+        $scope.sell = data.sell;
+        $scope.buy = data.buy;
+        $scope.ratio = data.ratio;
+        $scope.prevsell = data.prevsell;
+        $scope.prevbuy = data.prevbuy;
+        $scope.currentname = data.name;
+        $scope.arrowbuy = $scope.buy > $scope.prevbuy;
+        $scope.arrowsell = $scope.sell > $scope.prevsell;
+
+    });
 
     $scope.updateData = function(){
-        socket.on('sentData', function(data){
-            console.log(data);
+        socket.on('changeList', function(data){
             InfoCollection.update( data );
             $scope.addActive();
         });
@@ -57,18 +68,8 @@ app.controller('applicationCtrl',
             $scope.current = current.id;
             InfoCollection.update({id: current.id, active: true});
 
-            function sendData(){
+        socket.emit('changeCurrency', $scope.current);
 
-                var currentModel = InfoCollection.get(current.id);
-                Mediator.publish('sellRatio:refresh', {
-                    sell: currentModel.sell,
-                    buy: currentModel.buy,
-                    ratio: currentModel.ratio,
-                    prevBuy: currentModel.prevBuy,
-                    prevSell: currentModel.prevSell
-                });
-            }
-            sendData();
         }
     };
 
@@ -116,18 +117,20 @@ app.directive('clock', function($timeout){
     }
 });
 
-app.directive('info', function($timeout,Mediator){
+app.directive('info', function(){
     return {
+        scope: {
+            sell: '=',
+            buy: '=',
+            ratio: '=',
+            prevsell: '=',
+            prevbuy: '=',
+            currentname: '=',
+            arrowbuy: '=',
+            arrowsell: '='
+        },
         restrict: 'E',
         templateUrl: 'js/templates/info.html',
-        controller: function($scope){
-
-            Mediator.subscribe('sellRatio:refresh', function(data){
-                data.arrowBuy = data.buy > data.prevBuy;
-                data.arrowSell = data.sell > data.prevSell;
-                Object.assign($scope, data);
-        });
-        }
     }
 });
 
@@ -140,9 +143,6 @@ app.directive('list', function(){
             active: '=',
             items: '=',
             id: '=',
-            sell: '=',
-            ratio: '=',
-            buy: '=',
             changeactive: '='
         },
         restrict: 'E',
