@@ -20,8 +20,7 @@ app.controller('applicationCtrl',
     [   '$scope',
         'InfoCollection',
         '$location',
-        'socket',
-        'Mediator', function($scope, InfoCollection, $location, socket){
+        'socket', function($scope, InfoCollection, $location, socket){
 
     socket.on('basicList', function(data){
         InfoCollection.addAll(data);
@@ -80,6 +79,7 @@ app.controller('applicationCtrl',
         InfoCollection.update( {id: $scope.current, active: false} );
         InfoCollection.update( {id: id, active: true} );
         $scope.current = id;
+        socket.emit('changeCurrency', $scope.current);
     };
 
 }]);
@@ -130,7 +130,7 @@ app.directive('info', function(){
             arrowsell: '='
         },
         restrict: 'E',
-        templateUrl: 'js/templates/info.html',
+        templateUrl: 'js/templates/info.html'
     }
 });
 
@@ -166,43 +166,6 @@ app.service('generateRandom', function(){
     };
 });
 
-app.service('Mediator', function(){
-
-    var channels = {}; // Associative object.
-
-    this.publish = function(channel, data) {
-        if (! channels[channel]) {
-            return;
-        }
-        var args = Array.prototype.slice.call(arguments, 1);
-        var subscribers = channels[channel];
-        for( var i = 0; i < subscribers.length; i++) {
-            var subscriber = subscribers[i];
-            subscriber.apply(subscriber.context, args);
-        }
-
-    };
-
-    this.subscribe = function(channel, cb) {
-        if (! channels[channel]) {
-            channels[channel] = [];
-        }
-        return channels[channel].push(cb);
-    };
-
-    this.unsubscribe = function (channel) {
-        if (! channels[channel]) {
-            return false;
-        }
-        if (channels[channel]) {
-            var removed = channels[channel].splice(arguments, 1);
-            return (removed.length > 0);
-        }
-
-        return false;
-    };
-
-});
 
 
 
