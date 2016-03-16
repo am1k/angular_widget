@@ -22,11 +22,24 @@ app.controller('applicationCtrl',
         '$location',
         'socket', function($scope, InfoCollection, $location, socket){
 
-    socket.on('basicList', function(data){
-        InfoCollection.addAll(data);
-        $scope.addActive();
-        $scope.updateData();
-    });
+    $scope.requestBaseData = function(){
+        var xmlhttp = new XMLHttpRequest();
+        var url = "http://localhost:3000/api/basicList";
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var myArr = JSON.parse(xmlhttp.responseText);
+                InfoCollection.addAll(myArr);
+                $scope.addActive();
+                $scope.updateData();
+            }
+        };
+
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+    };
+
+    $scope.requestBaseData();
 
     socket.on('sentData', function(data){
         $scope.sell = data.sell;
